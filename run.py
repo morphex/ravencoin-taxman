@@ -72,10 +72,10 @@ usd_rates = {}
 if usd_rate_config:
     try:
         usd_rate_file, date, low, high = usd_rate_config.split(",")
-        usd_rates = parse_rate_file(usd_rate_file, date, low, high)
     except ValueError:
         print("Rate config: file name,date index,low rate index,high rate index")
         sys.exit(1)
+    usd_rates = parse_rate_file(usd_rate_file, date, low, high)
 
 balance = Decimal(0.0)
 

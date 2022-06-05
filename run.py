@@ -28,15 +28,10 @@ try:
 except IndexError:
     pass
 
-def parse_rate_file(filename, date, low, high, skip_header=True):
-    lines = open(filename).readlines()[1:]
-    date_index = int(date)
-    low_index = int(date)
-    high_index = int(date)
-    date_format = ""
+def guess_date_format(dates):
+    """Guess the date format given a set of dates."""
     year_index = month_index = day_index = None
-    for line in lines:
-        date = line.split(",")[date_index]
+    for date in dates:
         date = date.split(" ")[0]
         date = list(map(int, date.split("-")))
         if not year_index:
@@ -64,7 +59,27 @@ def parse_rate_file(filename, date, low, high, skip_header=True):
                 break
     else:
         raise ValueError("Unable to determine date format")
+    return year_index, month_index, day_index
+
+def parse_date(date, format):
+    """Returns year, month, day of a parsed date. Format is year_index, month_index, day_index."""
+    date_ = date.split("-")
+    year, month, day = date_[format[0]], date_[format[1]], date_[format[2]]
+    return year, month, day
+
+def parse_rate_file(filename, date, low, high, skip_header=True):
+    lines = open(filename).readlines()[1:]
+    date_index = int(date)
+    low_index = int(date)
+    high_index = int(date)
+    date_format = ""
+    dates = []
+    for line in lines:
+        dates.append(line.split(",")[date_index])
+    date_format = guess_date_format(dates)
+    year_index, month_index, day_index = date_format
     print("Date format", year_index, month_index, day_index, file=sys.stderr)
+    print("First date", parse_date(lines[0].split(",")[date_index], date_format), file=sys.stderr)
     return {}
 
 usd_rates = {}

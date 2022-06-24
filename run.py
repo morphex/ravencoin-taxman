@@ -50,6 +50,10 @@ def guess_separator(csv_data_lines, default=","):
         return ","
     if comma_count_data < semicolon_count_data:
         return ";"
+    else:
+        DEBUG_PRINT("Unable to determine column separator")
+        DEBUG_PRINT("Choosing ,")
+        return ","
 
 def guess_date_format(dates):
     """Guess the date format given a set of dates."""
